@@ -7,10 +7,17 @@ author: ourren <i@ourren.com>
 """
 import requests
 import json
+import random
 import time
 
 def getgeo(ip):
-    headers = {'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1;'}
+    uas = []
+    for line in open("user_agents.txt").readlines():
+        if line.strip():
+            uas.append(line.strip()[1:-1-1])
+    random.shuffle(uas)
+    ua = random.choice(uas)  # select a random user agent
+    headers = {'User-Agent': ua}
     r = requests.get("http://ip-api.com/json/" + str(ip), headers=headers, verify=False)
     if r.status_code == 200 and "Sorry, you have exceeded the daily query limit" not in r.content:
         hostname = ""

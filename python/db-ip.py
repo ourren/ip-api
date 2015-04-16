@@ -7,10 +7,18 @@ author: ourren <i@ourren.com>
 """
 import warnings
 import requests
+import random
 from requests.packages.urllib3 import exceptions
 
+
 def getgeo(ip):
-    headers = {'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1;'}
+    uas = []
+    for line in open("user_agents.txt").readlines():
+        if line.strip():
+            uas.append(line.strip()[1:-1-1])
+    random.shuffle(uas)
+    ua = random.choice(uas)  # select a random user agent
+    headers = {'User-Agent': ua}
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", exceptions.InsecureRequestWarning)
         r = requests.get("https://db-ip.com/" + str(ip), headers=headers, verify=False)
